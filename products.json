@@ -10,7 +10,7 @@
     "stock": "1000 m² ve üzeri",
     "price": "Fiyat sorunuz",
     "campaign": true,
-    "image": "images/ark-ivory.jpg",
+    "image": "ark-ivory.jpg",
     "description": "Teknik seramik. Mat yüzey. 1. sınıf.",
     "active": true
   },
@@ -25,7 +25,7 @@
     "stock": "Stok bilgisi için sorunuz",
     "price": "Fiyat sorunuz",
     "campaign": true,
-    "image": "images/bianco-river.jpg",
+    "image": "bianco-river.jpg",
     "description": "Teknik seramik. Parlak yüzey. 1. sınıf.",
     "active": true
   },
@@ -40,7 +40,7 @@
     "stock": "1000 m² ve üzeri",
     "price": "Fiyat sorunuz",
     "campaign": false,
-    "image": "images/martins-marble-light.jpg",
+    "image": "martins-marble-light.jpg",
     "description": "Teknik seramik. Parlak yüzey. 2. kalite.",
     "active": true
   }
