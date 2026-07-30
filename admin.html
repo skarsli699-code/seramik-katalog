@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katalog Güncelleme</title>
+<style>
+body{font-family:Arial;background:#f5f5f4;margin:0;padding:18px;color:#1c1917}
+.wrap{max-width:900px;margin:auto}.box{background:white;padding:18px;border-radius:14px;margin-bottom:14px;border:1px solid #e7e5e4}
+input,select,textarea{width:100%;padding:11px;margin:5px 0 10px;border:1px solid #d6d3d1;border-radius:8px;box-sizing:border-box}
+button{padding:12px 15px;border:none;border-radius:9px;font-weight:700;cursor:pointer}
+.primary{background:#111827;color:white}.green{background:#16a34a;color:white}.danger{background:#dc2626;color:white}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.item{border-top:1px solid #e7e5e4;padding:12px 0}
+@media(max-width:600px){.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body><div class="wrap">
+<div class="box">
+<h1>Katalog Güncelleme</h1>
+<p>products.json dosyasını seçin, ürünleri düzenleyin ve yeni dosyayı indirin. Sonra GitHub'daki eski products.json dosyasının yerine yükleyin.</p>
+<input type="file" id="file" accept=".json">
+</div>
+<div class="box">
+<h2>Yeni Ürün Ekle</h2>
+<div class="row"><input id="id" placeholder="Ürün kodu"><input id="name" placeholder="Ürün adı"></div>
+<div class="row"><input id="category" placeholder="Kategori"><input id="subcategory" placeholder="Alt kategori"></div>
+<div class="row"><input id="size" placeholder="Ölçü"><input id="stock" placeholder="Stok"></div>
+<div class="row"><input id="price" placeholder="Fiyat / Fiyat sorunuz"><input id="image" placeholder="Görsel bağlantısı"></div>
+<textarea id="description" placeholder="Kısa açıklama"></textarea>
+<label><input id="campaign" type="checkbox" style="width:auto"> Kampanyalı ürün</label><br><br>
+<button class="green" onclick="addProduct()">Ürünü Ekle</button>
+</div>
+<div class="box">
+<h2>Mevcut Ürünler</h2><div id="list">Önce products.json dosyasını seçin.</div>
+</div>
+<div class="box"><button class="primary" onclick="downloadJSON()">Güncel products.json Dosyasını İndir</button></div>
+<script>
+let data=[];
+file.onchange=async e=>{data=JSON.parse(await e.target.files[0].text());render()}
+function addProduct(){
+ data.push({id:id.value,name:name.value,category:category.value,subcategory:subcategory.value,size:size.value,stock:stock.value,price:price.value,campaign:campaign.checked,image:image.value,description:description.value,active:true});
+ render();
+}
+function render(){
+ list.innerHTML=data.map((p,i)=>`<div class="item"><b>${p.id} — ${p.name}</b><br>${p.category} | ${p.size} | ${p.stock}<br><button class="danger" onclick="removeItem(${i})">Sil</button></div>`).join('')
+}
+function removeItem(i){data.splice(i,1);render()}
+function downloadJSON(){
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='products.json';a.click()
+}
+</script>
+</div></body></html>

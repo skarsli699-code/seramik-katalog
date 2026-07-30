@@ -1,0 +1,20 @@
+[
+  {
+    "code": "SP-1001",
+    "status": "Yola çıktı",
+    "progress": 5,
+    "date": "31.07.2026",
+    "warehouse": "Gebze Depo",
+    "plate": "41 XXX 000",
+    "note": "Tahmini teslimat: 09.00–12.00"
+  },
+  {
+    "code": "SP-1002",
+    "status": "Ürünler hazırlanıyor",
+    "progress": 3,
+    "date": "01.08.2026",
+    "warehouse": "Gebze Depo",
+    "plate": "",
+    "note": "Sevkiyat planlaması devam ediyor."
+  }
+]

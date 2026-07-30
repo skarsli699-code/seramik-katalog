@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#111827" />
+  <link rel="manifest" href="manifest.json" />
+  <title>Güncel Ürün Kataloğu</title>
+  <style>
+    :root{--bg:#f5f5f4;--card:#fff;--text:#1c1917;--muted:#78716c;--line:#e7e5e4;--dark:#111827;--accent:#166534}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+    .wrap{max-width:1100px;margin:auto;padding:16px}
+    header{background:var(--dark);color:white;padding:18px 0;position:sticky;top:0;z-index:20}
+    header .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    h1{font-size:20px;margin:0}
+    .sub{font-size:12px;opacity:.8;margin-top:4px}
+    .hero{background:white;border:1px solid var(--line);border-radius:18px;padding:22px;margin:18px 0}
+    .hero h2{margin:0 0 8px;font-size:28px}
+    .hero p{margin:0;color:var(--muted);line-height:1.5}
+    .categories{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
+    .cat{background:white;border:1px solid var(--line);padding:18px 10px;border-radius:14px;text-align:center;font-weight:700;cursor:pointer}
+    .cat:hover{border-color:#a8a29e}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+    .action{padding:18px;border-radius:14px;border:none;font-size:16px;font-weight:700;cursor:pointer}
+    .project{background:#0f172a;color:#fff}
+    .tracking{background:#e7e5e4;color:#1c1917}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+    input,select,textarea{width:100%;padding:13px;border:1px solid var(--line);border-radius:10px;font-size:15px;background:white}
+    .toolbar input{flex:1;min-width:220px}
+    .toolbar select{width:220px}
+    .section-title{display:flex;align-items:center;justify-content:space-between;margin:22px 0 10px}
+    .section-title h3{margin:0}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+    .card img{width:100%;height:190px;object-fit:cover;background:#ddd}
+    .content{padding:14px}
+    .badge{display:inline-block;background:#dcfce7;color:#166534;padding:5px 8px;border-radius:999px;font-size:12px;font-weight:700}
+    .code{font-size:12px;color:var(--muted);margin-top:8px}
+    .card h4{font-size:18px;margin:8px 0}
+    .meta{font-size:14px;line-height:1.7;color:#44403c}
+    .btn{display:block;text-align:center;text-decoration:none;border:none;border-radius:10px;padding:12px;font-weight:700;cursor:pointer;width:100%;margin-top:10px}
+    .wa{background:#16a34a;color:white}
+    .detail{background:#f5f5f4;color:#1c1917}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+    .modal.open{display:flex}
+    .box{background:white;width:min(560px,100%);max-height:90vh;overflow:auto;border-radius:16px;padding:20px}
+    .box h3{margin-top:0}
+    .close{float:right;background:#e7e5e4;border:none;border-radius:8px;padding:8px 11px;cursor:pointer}
+    .steps{display:flex;justify-content:space-between;gap:4px;margin:20px 0}
+    .step{height:8px;flex:1;background:#e7e5e4;border-radius:8px}
+    .step.on{background:#16a34a}
+    footer{text-align:center;color:var(--muted);padding:30px 0;font-size:13px}
+    @media(max-width:800px){.categories{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.grid{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.hero h2{font-size:23px}.card img{height:220px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div>
+      <h1>Güncel Ürün Kataloğu</h1>
+      <div class="sub">Seramik • Armatür • Banyo Ürünleri</div>
+    </div>
+    <button class="action tracking" onclick="openTracking()" style="padding:10px 14px">Ürünüm Nerede?</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h2>Ne almak istiyorsunuz?</h2>
+    <p>Ürünü seçin, görselini inceleyin ve fiyat ile teslimat bilgisini WhatsApp üzerinden hemen alın.</p>
+  </section>
+
+  <section class="categories" id="categories"></section>
+
+  <section class="actions">
+    <button class="action project" onclick="openProject()">Proje ve Toplu Alım İçin Teklif Al</button>
+    <button class="action tracking" onclick="openTracking()">Ürünüm Nerede?</button>
+  </section>
+
+  <div class="toolbar">
+    <input id="search" placeholder="Ürün ara: beyaz, 60x60, batarya..." />
+    <select id="filter"><option value="">Tüm kategoriler</option></select>
+  </div>
+
+  <div class="section-title"><h3>Kampanyalı Ürünler</h3></div>
+  <section class="grid" id="campaigns"></section>
+
+  <div class="section-title"><h3>Tüm Ürünler</h3></div>
+  <section class="grid" id="products"></section>
+</main>
+
+<div class="modal" id="projectModal">
+  <div class="box">
+    <button class="close" onclick="closeModal('projectModal')">Kapat</button>
+    <h3>Proje ve Toplu Alım</h3>
+    <p>Bilgileri yazın; WhatsApp mesajınız otomatik hazırlansın.</p>
+    <input id="pLocation" placeholder="Proje / teslimat bölgesi" />
+    <input id="pUnits" placeholder="Daire sayısı veya işin büyüklüğü" />
+    <textarea id="pNeeds" rows="4" placeholder="Seramik, armatür, banyo dolabı vb. ihtiyaçlar"></textarea>
+    <input id="pDate" placeholder="İstenen teslim tarihi" />
+    <select id="pPayment"><option>Ödeme şekli belirtilmedi</option><option>Peşin</option><option>Vadeli</option><option>Çek</option></select>
+    <button class="btn wa" onclick="sendProject()">WhatsApp’tan Teklif İste</button>
+  </div>
+</div>
+
+<div class="modal" id="trackingModal">
+  <div class="box">
+    <button class="close" onclick="closeModal('trackingModal')">Kapat</button>
+    <h3>Ürünüm Nerede?</h3>
+    <p>Sipariş takip kodunuzu girin.</p>
+    <input id="trackingCode" placeholder="Örnek: SP-1001" />
+    <button class="btn project" onclick="trackOrder()">Siparişi Sorgula</button>
+    <div id="trackingResult"></div>
+  </div>
+</div>
+
+<footer>
+  Stok ve fiyat bilgileri güncellenebilir. Kesin bilgi için WhatsApp üzerinden teyit alınız.
+</footer>
+
+<script>
+const WHATSAPP_NUMBER = "905000000000"; // Kendi numaranızı ülke koduyla yazın.
+let allProducts = [];
+let orders = [];
+
+async function loadData(){
+  allProducts = await fetch('products.json').then(r=>r.json());
+  orders = await fetch('orders.json').then(r=>r.json());
+  allProducts = allProducts.filter(x=>x.active);
+  setupCategories();
+  render();
+}
+
+function setupCategories(){
+  const fixed = ["Seramik","Armatür","Banyo Dolabı","Duşakabin","Klozet ve Lavabo","Yapıştırıcı ve Derz","Kampanyalar"];
+  const cats = [...new Set([...fixed, ...allProducts.map(x=>x.category)])];
+  document.getElementById('categories').innerHTML = cats.map(c=>`<div class="cat" onclick="pickCategory('${c}')">${c}</div>`).join('');
+  document.getElementById('filter').innerHTML = '<option value="">Tüm kategoriler</option>' +
+    [...new Set(allProducts.map(x=>x.category))].map(c=>`<option>${c}</option>`).join('');
+}
+
+function pickCategory(c){
+  if(c==="Kampanyalar"){ document.getElementById('filter').value=""; document.getElementById('search').value=""; window.scrollTo({top:document.getElementById('campaigns').offsetTop-110,behavior:'smooth'}); return; }
+  document.getElementById('filter').value=c; render();
+  window.scrollTo({top:document.getElementById('products').offsetTop-110,behavior:'smooth'});
+}
+
+function productCard(p){
+  const msg = encodeURIComponent(`Merhaba, katalogdaki ${p.id} kodlu ${p.name} ürünüyle ilgileniyorum.\nYaklaşık ihtiyacım: ... m²/adet\nTeslimat bölgesi: ...\nGüncel fiyat ve teslimat bilgisi alabilir miyim?`);
+  return `<article class="card">
+    <img src="${p.image}" alt="${p.name}" loading="lazy">
+    <div class="content">
+      ${p.campaign?'<span class="badge">Kampanya</span>':''}
+      <div class="code">${p.id}</div>
+      <h4>${p.name}</h4>
+      <div class="meta"><b>Kategori:</b> ${p.category}<br><b>Ölçü:</b> ${p.size}<br><b>Stok:</b> ${p.stock}<br><b>Fiyat:</b> ${p.price}</div>
+      <a class="btn wa" href="https://wa.me/${WHATSAPP_NUMBER}?text=${msg}" target="_blank">Fiyat ve Teslimat Sor</a>
+    </div>
+  </article>`;
+}
+
+function render(){
+  const q = document.getElementById('search').value.toLowerCase();
+  const f = document.getElementById('filter').value;
+  const filtered = allProducts.filter(p => (!f || p.category===f) && JSON.stringify(p).toLowerCase().includes(q));
+  document.getElementById('products').innerHTML = filtered.map(productCard).join('') || '<p>Uygun ürün bulunamadı.</p>';
+  document.getElementById('campaigns').innerHTML = allProducts.filter(p=>p.campaign).map(productCard).join('') || '<p>Aktif kampanya bulunmuyor.</p>';
+}
+
+document.getElementById('search').addEventListener('input',render);
+document.getElementById('filter').addEventListener('change',render);
+
+function openProject(){document.getElementById('projectModal').classList.add('open')}
+function openTracking(){document.getElementById('trackingModal').classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+
+function sendProject(){
+  const text = `Merhaba, proje/toplu alım için teklif istiyorum.\nBölge: ${pLocation.value}\nDaire / iş büyüklüğü: ${pUnits.value}\nİhtiyaçlar: ${pNeeds.value}\nTeslim tarihi: ${pDate.value}\nÖdeme: ${pPayment.value}`;
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`,'_blank');
+}
+
+function trackOrder(){
+  const code = document.getElementById('trackingCode').value.trim().toUpperCase();
+  const o = orders.find(x=>x.code.toUpperCase()===code);
+  const el = document.getElementById('trackingResult');
+  if(!o){el.innerHTML='<p style="color:#b91c1c;font-weight:700">Takip kodu bulunamadı. Satış temsilcinizle iletişime geçin.</p>';return}
+  el.innerHTML = `<div style="margin-top:18px;padding:16px;background:#f5f5f4;border-radius:12px">
+    <b>${o.code}</b><h3 style="margin:8px 0">${o.status}</h3>
+    <div class="steps">${[1,2,3,4,5,6,7].map(i=>`<div class="step ${i<=o.progress?'on':''}"></div>`).join('')}</div>
+    <p><b>Planlanan tarih:</b> ${o.date}<br><b>Çıkış:</b> ${o.warehouse}<br>${o.plate?'<b>Plaka:</b> '+o.plate+'<br>':''}<b>Not:</b> ${o.note}</p>
+  </div>`;
+}
+
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}
+loadData();
+</script>
+</body>
+</html>
